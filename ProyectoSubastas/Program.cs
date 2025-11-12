@@ -35,14 +35,15 @@ class Program
 
         // TEST POSTOR
         /*
-        using var controller = new PostorController();
-        controller.Crear("Ana Gómez", "ana@mail.com");
-        controller.Crear("Luis Torres", "luis@mail.com");
+        var controller = new PostorController();
+        controller.CrearPostor("Felipa Gomez", "felipa@mail.com");
+        controller.CrearPostor("Fede Gutierrez", "fede@mail.com");
 
-        var lista = controller.Listar();
+        var lista = controller.ListarPostores();
         Console.WriteLine("📋 Listado de postores:");
         foreach (var p in lista)
             Console.WriteLine($"{p.IdPostor} | {p.Nombre} | {p.Mail}");
         */
+        
     }
 }
