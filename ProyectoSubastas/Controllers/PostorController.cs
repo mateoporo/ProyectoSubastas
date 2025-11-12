@@ -1,47 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using ProyectoSubastas.Models;
+﻿using ProyectoSubastas.Models;
 using ProyectoSubastas.Services;
+using System.Collections.Generic;
 
 namespace ProyectoSubastas.Controllers
 {
-    public class PostorController : IDisposable
+    public class PostorController
     {
-        private readonly PostorService _service;
+        private readonly PostorService service;
 
-        public PostorController(string dbPath = null)
+        public PostorController()
         {
-            _service = new PostorService(dbPath);
+            service = new PostorService();
         }
 
-        public Postor Crear(string nombre, string mail)
+        public List<Postor> ListarPostores()
         {
-            return _service.CrearPostor(nombre, mail);
+            return service.ListarPostores();
         }
 
-        public Postor Obtener(int id)
+        public bool CrearPostor(string nombre, string mail)
         {
-            return _service.ObtenerPorId(id);
+            Postor p = new Postor
+            {
+                Nombre = nombre,
+                Mail = mail
+            };
+
+            return service.CrearPostor(p);
         }
 
-        public List<Postor> Listar()
+        public bool ModificarPostor(int id, string nombre, string mail)
         {
-            return _service.ObtenerTodos();
+            Postor p = new Postor
+            {
+                IdPostor = id,
+                Nombre = nombre,
+                Mail = mail
+            };
+
+            return service.ModificarPostor(p);
         }
 
-        public void Actualizar(Postor p)
+        public bool EliminarPostor(int id)
         {
-            _service.ActualizarPostor(p);
-        }
-
-        public void Eliminar(int id)
-        {
-            _service.EliminarPostor(id);
-        }
-
-        public void Dispose()
-        {
-            _service?.Dispose();
+            return service.EliminarPostor(id);
         }
     }
 }

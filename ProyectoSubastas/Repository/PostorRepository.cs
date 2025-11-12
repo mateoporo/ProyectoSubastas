@@ -6,14 +6,15 @@ using ProyectoSubastas.Models;
 
 namespace ProyectoSubastas.Repository
 {
-    public class PostorRepository : IDisposable
+    public class PostorRepository
     {
         private readonly string _connectionString;
         private readonly SqliteConnection _connection;
 
         public PostorRepository(string databaseFilePath = null)
         {
-            // Si no se pasa ruta, usar la misma base que Subastador
+            SQLitePCL.Batteries.Init(); // inicializa SQLite nativo
+            // Si no se pasa ruta, usar la misma base bd_subastas.db
             if (string.IsNullOrEmpty(databaseFilePath))
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -41,7 +42,7 @@ namespace ProyectoSubastas.Repository
             cmd.ExecuteNonQuery();
         }
 
-        public Postor Create(Postor p)
+        public Postor Crear(Postor p)
         {
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = "INSERT INTO Postor (Nombre, Mail) VALUES (@nombre, @mail);";
@@ -73,7 +74,25 @@ namespace ProyectoSubastas.Repository
             return null;
         }
 
-        public List<Postor> GetAll()
+        public Postor GetByMail(string mail)
+        {
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = "SELECT Id, Nombre, Mail FROM Postor WHERE Mail = @mail;";
+            cmd.Parameters.AddWithValue("@mail", mail);
+
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new Postor(
+                    idPostor: reader.GetInt32(0),
+                    nombre: reader.GetString(1),
+                    mail: reader.GetString(2)
+                );
+            }
+            return null;
+        }
+
+        public List<Postor> ObtenerTodos()
         {
             var list = new List<Postor>();
             using var cmd = _connection.CreateCommand();
@@ -90,7 +109,7 @@ namespace ProyectoSubastas.Repository
             return list;
         }
 
-        public bool Update(Postor p)
+        public bool Modificar(Postor p)
         {
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = "UPDATE Postor SET Nombre = @nombre, Mail = @mail WHERE Id = @id;";
@@ -101,18 +120,13 @@ namespace ProyectoSubastas.Repository
             return rows > 0;
         }
 
-        public bool Delete(int id)
+        public bool Eliminar(int id)
         {
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = "DELETE FROM Postor WHERE Id = @id;";
             cmd.Parameters.AddWithValue("@id", id);
             var rows = cmd.ExecuteNonQuery();
             return rows > 0;
-        }
-
-        public void Dispose()
-        {
-            _connection?.Dispose();
         }
     }
 }

@@ -1,65 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using ProyectoSubastas.Models;
+﻿using ProyectoSubastas.Models;
 using ProyectoSubastas.Repository;
+using System.Collections.Generic;
 
 namespace ProyectoSubastas.Services
 {
-    public class PostorService : IDisposable
+    public class PostorService
     {
-        private readonly PostorRepository _repo;
+        private readonly PostorRepository repository;
 
-        public PostorService(string dbPath = null)
+        public PostorService()
         {
-            _repo = new PostorRepository(dbPath);
+            repository = new PostorRepository();
         }
 
-        public Postor CrearPostor(string nombre, string mail)
+        public List<Postor> ListarPostores()
         {
-            var model = new Postor(0, nombre, mail);
-            var errors = model.Validate();
-            if (errors.Count > 0)
-                throw new ArgumentException(string.Join("; ", GetErrorMessages(errors)));
-
-            return _repo.Create(model);
+            return repository.ObtenerTodos();
         }
 
-        public Postor ObtenerPorId(int id)
+        public bool CrearPostor(Postor postor)
         {
-            return _repo.GetById(id);
+            Postor existente = repository.GetByMail(postor.Mail);
+            if (existente != null)
+            {
+                return false; // Ya existe un postor con ese mail
+            }
+
+            repository.Crear(postor);
+            return true;
         }
 
-        public List<Postor> ObtenerTodos()
+        public bool ModificarPostor(Postor postor)
         {
-            return _repo.GetAll();
+            Postor existente = repository.GetById(postor.IdPostor);
+            if (existente == null)
+            {
+                return false; // No existe el postor a modificar
+            }
+
+            repository.Modificar(postor);
+            return true;
         }
 
-        public void ActualizarPostor(Postor actualizado)
+        public bool EliminarPostor(int id)
         {
-            var errors = actualizado.Validate();
-            if (errors.Count > 0)
-                throw new ArgumentException(string.Join("; ", GetErrorMessages(errors)));
+            Postor existente = repository.GetById(id);
+            if (existente == null)
+            {
+                return false;
+            }
 
-            var ok = _repo.Update(actualizado);
-            if (!ok)
-                throw new InvalidOperationException("No se pudo actualizar el postor (id no encontrado).");
-        }
-
-        public void EliminarPostor(int id)
-        {
-            var ok = _repo.Delete(id);
-            if (!ok)
-                throw new InvalidOperationException("No se pudo eliminar el postor (id no encontrado).");
-        }
-
-        private IEnumerable<string> GetErrorMessages(IList<System.ComponentModel.DataAnnotations.ValidationResult> errs)
-        {
-            foreach (var e in errs) yield return e.ErrorMessage;
-        }
-
-        public void Dispose()
-        {
-            _repo?.Dispose();
+            repository.Eliminar(id);
+            return true;
         }
     }
 }
