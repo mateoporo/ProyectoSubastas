@@ -6,31 +6,16 @@ class Program
 {
     static void Main()
     {
-        //using var controller = new ProyectoSubastas.Controllers.SubastadorController("bd_subastas.db");
-
         // TEST SUBASTADOR
-        // Crear
-        //var creado = controller.Crear("Pepe Gutierrez", "pepe@gmail.com");
-        //Console.WriteLine($"Creado Id: {creado.IdSubastador}, Nombre: {creado.Nombre}");
-
-        // Listar
         /*
-        var todos = controller.Listar();
-        Console.WriteLine("Listado:");
-        foreach (var s in todos) Console.WriteLine($"{s.IdSubastador} | {s.Nombre} | {s.Mail}");
+        var controller = new SubastadorController();
+        controller.CrearSubastador("Pepe Gomez", "pepe@mail.com");
+        controller.CrearSubastador("Juan Gutierrez", "juan@mail.com");
 
-        // Obtener
-        var uno = controller.Obtener(creado.IdSubastador);
-        Console.WriteLine($"Obtenido: {uno.Nombre}");
-
-        // Actualizar
-        uno.Nombre = "Pepe G.";
-        controller.Actualizar(uno);
-        Console.WriteLine("Actualizado.");
-
-        // Eliminar
-        controller.Eliminar(uno.IdSubastador);
-        Console.WriteLine("Eliminado.");
+        var lista = controller.ListarSubastadores();
+        Console.WriteLine("📋 Listado de subastadores:");
+        foreach (var p in lista)
+            Console.WriteLine($"{p.IdSubastador} | {p.Nombre} | {p.Mail}");
         */
 
         // TEST POSTOR
@@ -44,6 +29,6 @@ class Program
         foreach (var p in lista)
             Console.WriteLine($"{p.IdPostor} | {p.Nombre} | {p.Mail}");
         */
-        
+
     }
 }
