@@ -1,65 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using ProyectoSubastas.Models;
+﻿using ProyectoSubastas.Models;
 using ProyectoSubastas.Repository;
+using System.Collections.Generic;
 
 namespace ProyectoSubastas.Services
 {
-    public class SubastadorService : IDisposable
+    public class SubastadorService
     {
-        private readonly SubastadorRepository _repo;
+        private readonly SubastadorRepository repository;
 
-        public SubastadorService(string dbPath = "bd_subastas.db")
+        public SubastadorService()
         {
-            _repo = new SubastadorRepository(dbPath);
+            repository = new SubastadorRepository();
         }
 
-        public Subastador CrearSubastador(string nombre, string mail)
+        public List<Subastador> ListarSubastadores()
         {
-            var model = new Subastador(0, nombre, mail);
-            var errors = model.Validate();
-            if (errors.Count > 0)
-                throw new ArgumentException(string.Join("; ", GetErrorMessages(errors)));
-
-            return _repo.Create(model);
+            return repository.ObtenerTodos();
         }
 
-        public Subastador ObtenerPorId(int id)
+        public bool CrearSubastador(Subastador subastador)
         {
-            return _repo.GetById(id);
+            Subastador existente = repository.ObtenerPorMail(subastador.Mail);
+            if (existente != null)
+            {
+                return false; // Ya existe un subastador con ese mail
+            }
+
+            repository.Crear(subastador);
+            return true;
         }
 
-        public List<Subastador> ObtenerTodos()
+        public bool ModificarSubastador(Subastador subastador)
         {
-            return _repo.GetAll();
+            Subastador existente = repository.ObtenerPorId(subastador.IdSubastador);
+            if (existente == null)
+            {
+                return false; // No existe el subastador a modificar
+            }
+
+            repository.Modificar(subastador);
+            return true;
         }
 
-        public void ActualizarSubastador(Subastador actualizado)
+        public bool EliminarSubastador(int id)
         {
-            var errors = actualizado.Validate();
-            if (errors.Count > 0)
-                throw new ArgumentException(string.Join("; ", GetErrorMessages(errors)));
+            Subastador existente = repository.ObtenerPorId(id);
+            if (existente == null)
+            {
+                return false;
+            }
 
-            var ok = _repo.Update(actualizado);
-            if (!ok)
-                throw new InvalidOperationException("No se pudo actualizar el subastador (id no encontrado).");
+            repository.Eliminar(id);
+            return true;
         }
 
-        public void EliminarSubastador(int id)
+        public Subastador ObtenerSubastadorPorId(int id)
         {
-            var ok = _repo.Delete(id);
-            if (!ok)
-                throw new InvalidOperationException("No se pudo eliminar el subastador (id no encontrado).");
-        }
-
-        private IEnumerable<string> GetErrorMessages(IList<System.ComponentModel.DataAnnotations.ValidationResult> errs)
-        {
-            foreach (var e in errs) yield return e.ErrorMessage;
-        }
-
-        public void Dispose()
-        {
-            _repo?.Dispose();
+            return repository.ObtenerPorId(id);
         }
     }
 }

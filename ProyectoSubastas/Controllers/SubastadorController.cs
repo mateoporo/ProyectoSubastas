@@ -1,47 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using ProyectoSubastas.Models;
+﻿using ProyectoSubastas.Models;
 using ProyectoSubastas.Services;
+using System.Collections.Generic;
 
 namespace ProyectoSubastas.Controllers
 {
-    public class SubastadorController : IDisposable
+    public class SubastadorController
     {
-        private readonly SubastadorService _service;
+        private readonly SubastadorService service;
 
-        public SubastadorController(string dbPath = "bd_subastas.db")
+        public SubastadorController()
         {
-            _service = new SubastadorService(dbPath);
+            service = new SubastadorService();
         }
 
-        public Subastador Crear(string nombre, string mail)
+        public List<Subastador> ListarSubastadores()
         {
-            return _service.CrearSubastador(nombre, mail);
+            return service.ListarSubastadores();
         }
 
-        public Subastador Obtener(int id)
+        public bool CrearSubastador(string nombre, string mail)
         {
-            return _service.ObtenerPorId(id);
+            Subastador s = new Subastador
+            {
+                Nombre = nombre,
+                Mail = mail
+            };
+
+            return service.CrearSubastador(s);
         }
 
-        public List<Subastador> Listar()
+        public bool ModificarSubastador(int id, string nombre, string mail)
         {
-            return _service.ObtenerTodos();
+            Subastador s = new Subastador
+            {
+                IdSubastador = id,
+                Nombre = nombre,
+                Mail = mail
+            };
+
+            return service.ModificarSubastador(s);
         }
 
-        public void Actualizar(Subastador s)
+        public bool EliminarSubastador(int id)
         {
-            _service.ActualizarSubastador(s);
+            return service.EliminarSubastador(id);
         }
 
-        public void Eliminar(int id)
+        public Subastador ObtenerSubastadorPorId(int id)
         {
-            _service.EliminarSubastador(id);
-        }
-
-        public void Dispose()
-        {
-            _service?.Dispose();
+            return service.ObtenerSubastadorPorId(id);
         }
     }
 }
