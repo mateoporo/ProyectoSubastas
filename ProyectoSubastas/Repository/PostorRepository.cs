@@ -25,7 +25,7 @@ namespace ProyectoSubastas.Repository
             _connection = new SqliteConnection(_connectionString);
             _connection.Open();
 
-            Console.WriteLine($"📂 Base de datos usada: {databaseFilePath}");
+            Console.WriteLine($"Base de datos usada: {databaseFilePath}");
             EnsureTable();
         }
 
@@ -56,7 +56,7 @@ namespace ProyectoSubastas.Repository
             return p;
         }
 
-        public Postor GetById(int id)
+        public Postor ObtenerPorId(int id)
         {
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = "SELECT Id, Nombre, Mail FROM Postor WHERE Id = @id;";
@@ -74,7 +74,7 @@ namespace ProyectoSubastas.Repository
             return null;
         }
 
-        public Postor GetByMail(string mail)
+        public Postor ObtenerPorMail(string mail)
         {
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = "SELECT Id, Nombre, Mail FROM Postor WHERE Mail = @mail;";
