@@ -1,9 +1,11 @@
 ﻿using System;
 using ProyectoSubastas.Controllers;
 using ProyectoSubastas.Models;
+using ProyectoSubastas.Views;
 
 class Program
 {
+    [STAThread]
     static void Main()
     {
         // TEST SUBASTADOR
@@ -29,6 +31,11 @@ class Program
         foreach (var p in lista)
             Console.WriteLine($"{p.IdPostor} | {p.Nombre} | {p.Mail}");
         */
+
+        // Inicialización clásica para evitar dependencias de ApplicationConfiguration (plantilla VS)
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new Login());
 
     }
 }
