@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProyectoSubastas.Views.Postor;
+using System;
 using System.Windows.Forms;
 
 namespace ProyectoSubastas.Views
@@ -15,6 +9,18 @@ namespace ProyectoSubastas.Views
         public Login()
         {
             InitializeComponent();
+        }
+
+        private void btnCrearPostor_Click(object sender, EventArgs e)
+        {
+            var form = new CrearCuenta("Postor");
+            form.ShowDialog();
+        }
+
+        private void btnCrearSubastador_Click(object sender, EventArgs e)
+        {
+            CrearCuenta form = new CrearCuenta("Subastador");
+            form.ShowDialog();
         }
     }
 }

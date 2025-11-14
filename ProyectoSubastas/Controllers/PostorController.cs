@@ -45,5 +45,10 @@ namespace ProyectoSubastas.Controllers
         {
             return service.EliminarPostor(id);
         }
+
+        public Postor ObtenerPorMail(string mail)
+        {
+            return service.ObtenerPostorPorMail(mail);
+        }
     }
 }

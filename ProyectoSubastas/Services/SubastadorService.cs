@@ -58,5 +58,11 @@ namespace ProyectoSubastas.Services
         {
             return repository.ObtenerPorId(id);
         }
+
+        public Subastador ObtenerSubastadorPorMail(string mail)
+        {
+            return repository.ObtenerPorMail(mail);
+        }
+
     }
 }

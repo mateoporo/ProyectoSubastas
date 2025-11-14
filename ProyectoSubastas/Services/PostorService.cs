@@ -53,5 +53,10 @@ namespace ProyectoSubastas.Services
             repository.Eliminar(id);
             return true;
         }
+
+        public Postor ObtenerPostorPorMail(string mail)
+        {
+            return repository.ObtenerPorMail(mail);
+        }
     }
 }

@@ -50,5 +50,10 @@ namespace ProyectoSubastas.Controllers
         {
             return service.ObtenerSubastadorPorId(id);
         }
+
+        public Subastador ObtenerPorMail(string mail)
+        {
+            return service.ObtenerSubastadorPorMail(mail);
+        }
     }
 }
