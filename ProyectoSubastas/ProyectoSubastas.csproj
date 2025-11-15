@@ -14,4 +14,13 @@
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\Images\postor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Images\subastador.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

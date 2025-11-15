@@ -18,18 +18,21 @@ namespace ProyectoSubastas.Views
         {
             InitializeComponent();
             this.tipoUsuario = tipoUsuario;
-            gpDatosUsuario.Text = tipoUsuario;
+            gpDatosUsuario.Text = $"Gestionar cuenta {tipoUsuario}";
             CargarDatosUsuario();
         }
 
         private void CargarDatosUsuario()
         {
+            // Ruta base del proyecto (bin/Debug → se retrocede a raiz de proyecto)
+            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\");
             if (tipoUsuario == "Postor" && SesionUsuario.PostorActual != null)
             {
                 txtNombre.Text = SesionUsuario.PostorActual.Nombre;
                 txtMail.Text = SesionUsuario.PostorActual.Mail;
                 btnPujar.Enabled = true;
                 btnEgresoSubasta.Enabled = true;
+                picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "postor.png"));
             }
             else if (tipoUsuario == "Subastador" && SesionUsuario.SubastadorActual != null)
             {
@@ -38,6 +41,7 @@ namespace ProyectoSubastas.Views
                 btnCrearSubasta.Enabled = true;
                 btnModificarSubasta.Enabled = true;
                 btnEliminarSubasta.Enabled = true;
+                picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "subastador.png"));
             }
         }
     }
