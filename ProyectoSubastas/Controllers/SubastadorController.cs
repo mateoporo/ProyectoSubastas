@@ -7,10 +7,12 @@ namespace ProyectoSubastas.Controllers
     public class SubastadorController
     {
         private readonly SubastadorService service;
+        private readonly SubastaService subastaService;
 
         public SubastadorController()
         {
             service = new SubastadorService();
+            subastaService = new SubastaService();
         }
 
         public List<Subastador> ListarSubastadores()
@@ -54,6 +56,19 @@ namespace ProyectoSubastas.Controllers
         public Subastador ObtenerPorMail(string mail)
         {
             return service.ObtenerSubastadorPorMail(mail);
+        }
+
+        public bool SePuedeEliminar(int idSubastador, out string mensaje)
+        {
+            mensaje = "";
+            var subastas = subastaService.ListarSubastas();
+            bool tieneSubastas = subastas.Any(s => s.IdSubastador == idSubastador);
+            if (tieneSubastas)
+            {
+                mensaje = "El subastador tiene subastas registradas y no puede ser eliminado.";
+                return false;
+            }
+            return true;
         }
     }
 }
