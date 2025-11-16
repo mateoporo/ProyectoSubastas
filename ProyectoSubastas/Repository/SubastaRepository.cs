@@ -102,7 +102,8 @@ namespace ProyectoSubastas.Repository
                 PujaAumento = reader.GetDecimal(3),
                 FechaInicio = DateTime.Parse(reader.GetString(4)),
                 FechaFin = DateTime.Parse(reader.GetString(5)),
-                IdSubastador = reader.GetInt32(6)
+                IdSubastador = reader.GetInt32(6),
+                Ofertas = _ofertaRepository.ObtenerPorSubasta(reader.GetInt32(0))
             };
         }
 
@@ -141,7 +142,7 @@ namespace ProyectoSubastas.Repository
                 subasta.Ofertas = _ofertaRepository.ObtenerPorSubasta(subasta.IdSubasta);
                 subasta.Participantes = subasta.Ofertas
                     .Select(o => o.Postor)
-                    .Distinct()
+                    .DistinctBy(p => p.IdPostor) // <-- Aquí filtra por Id único
                     .ToList();
 
                 list.Add(subasta);
