@@ -117,33 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="colId.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colArticulo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colUltimaOferta.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPujaInicial.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPujaAumento.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colFechaInicio.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colFechaFin.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSubastador.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colEstado.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnGuardarUsuarioModificado.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
+        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAPfSURBVFhH3Zdt
+        TBN3AIf/R6+0UF63nWuxQ0UE6rAHrZvxhRdLg4qDDWIQ5paB00QXIrNuDDJ1ZgvJlmVBEnRmGFFJNBCN
+        GU4xDHGERU1cBjEazZwLIwvORVBcWGkp/S135OrRq7RecUu85PnSXn7P07vrhyOEEIYQkiAingR/zPHa
+        1Hmf8OhQ0Hainz/sIVRtJ4S8RwixysRGVOGeTUqf/JCKZsZJ9Kwqb/XkEaq2Uz84IUCW5rlI4mIXxVod
+        VKLJoXmOcadZ8ibSs1ePmzNzHphXrLxvXpE9bM5Yed+ckTNiyrL+bcrKHTVlr7KnW9Y4EtjFrjBrsUu8
+        qTw2AOolg8t3hCRgLaiKRoTs7UXItkMwLLPgu6sDPqlvbUd+2Vae4i3bcbqvH580HEZEbolnTxrBVAce
+        sOccinZ8JhELvFNZDcpoAVW8E6GRMWi5eP2xARy0zysxXcDeXnzR/atEPCXgtW38eWFMnN8AjtCj/V4R
+        0wV8cAysZa1EHEyAomMMqsbbkxGxcdXTB/h5BuQEcKhbRvgIogof/38CWkf4CBIWEVxA2fs1CEk0g7aW
+        gw6LeAoBlYeRtCRTIhZoPNODit2f89hq6/jPdtYfhGbVmxJp4AEZhSDaeSBzU0HiEkEpaGiTUqFNXgSt
+        gfWLhtFBsbtZIg04gGq7A+qby/Jpvgbq9F3fdI76D9DkliJqlg7PxyfMKNwmt+03IDb7dZzpvICH45hR
+        uE1u+9kO6Lt5C7VffoURp1vy3VMP6L3xC3Rz9NCzSSjfukUSMfDXMFIOdAQXwI14D4vlBftsqOg7hAWZ
+        JknE0D9OpJ39TX5A9+UriIyJxlub3p0yLJZX3mjmWXf0Y2iiItH/5z3Pee1d3Yi1FMoL6LnyM5jZWhQe
+        rEKKdQlKy8rwwDHhkec3bPfIS098Ckavw/kfL03ZkP0M/H53CJExUShqquEFFVebkGx5BUUlJZJfvr5l
+        D16I06Kz56LkCsoO4C73ho3lSMl5lZcLEWnrLAHLgwp4FLERqXnLPUIxk/IXHysPOkCIaG1vR+3ttieW
+        z0iAQPOpU3h59TL+NgQqFweEdDl4uTTg7BCobwf9Bgi3I2GpMWC5OIBu+QPqI4M+AnbsB3m7xm+AEFG1
+        a5fkrzYdkwEFUBR9COXmeh8BtgaQDR8FFCCHtu8vQJuZD/oNG5Sb6kQB6nCnsm0UdNMt0F/3QZdVgJMd
+        Xbgz5p4RBsfcGLBP4Pi584jPyoeq7ieoDtwUBShVTmpuqkOA1kS54+cvcBvY9AkDm+5aaGSdCxcZHbIw
+        sk5ug9viNrltsYtzc68m3q/n/yXMvzAdsYyrxT/iAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="colId.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
