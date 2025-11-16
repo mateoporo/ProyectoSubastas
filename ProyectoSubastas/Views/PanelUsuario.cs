@@ -144,7 +144,14 @@ namespace ProyectoSubastas.Views
 
         private void btnModificarSubasta_Click(object sender, EventArgs e)
         {
-            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(false);
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una subasta para modificar.");
+                return;
+            }
+            int id = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
+            Subasta sub = subastaController.ObtenerSubasta(id);
+            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(sub);
             modificarSubastaForm.ShowDialog();
         }
 
