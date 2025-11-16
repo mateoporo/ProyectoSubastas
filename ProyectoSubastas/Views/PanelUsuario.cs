@@ -197,5 +197,17 @@ namespace ProyectoSubastas.Views
                 MessageBox.Show("Error al cargar subastas: " + ex.Message);
             }
         }
+
+        private void dgvSubastas_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                btnModificarSubasta.Enabled = false;
+                return;
+            }
+            var fila = dgvSubastas.SelectedRows[0];
+            int idSubastadorFila = Convert.ToInt32(fila.Cells["colId"].Value);
+            btnModificarSubasta.Enabled = (idSubastadorFila == SesionUsuario.SubastadorActual.IdSubastador);
+        }
     }
 }
