@@ -23,14 +23,7 @@ namespace ProyectoSubastas.Controllers
             return service.ListarSubastas();
         }
 
-        public bool CrearSubasta(
-            string articulo,
-            decimal pujaInicial,
-            decimal pujaAumento,
-            DateTime fechaInicio,
-            DateTime fechaFin,
-            int idSubastador
-        )
+        public bool CrearSubasta(string articulo, decimal pujaInicial, decimal pujaAumento, DateTime fechaInicio, DateTime fechaFin, int idSubastador)
         {
             Subasta s = new Subasta
             {

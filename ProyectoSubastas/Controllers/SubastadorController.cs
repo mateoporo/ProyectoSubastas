@@ -15,11 +15,6 @@ namespace ProyectoSubastas.Controllers
             subastaService = new SubastaService();
         }
 
-        public List<Subastador> ListarSubastadores()
-        {
-            return service.ListarSubastadores();
-        }
-
         public bool CrearSubastador(string nombre, string mail)
         {
             Subastador s = new Subastador
@@ -46,11 +41,6 @@ namespace ProyectoSubastas.Controllers
         public bool EliminarSubastador(int id)
         {
             return service.EliminarSubastador(id);
-        }
-
-        public Subastador ObtenerSubastadorPorId(int id)
-        {
-            return service.ObtenerSubastadorPorId(id);
         }
 
         public Subastador ObtenerPorMail(string mail)

@@ -17,11 +17,6 @@ namespace ProyectoSubastas.Controllers
             ofertaController = new OfertaController();
         }
 
-        public List<Postor> ListarPostores()
-        {
-            return service.ListarPostores();
-        }
-
         public bool CrearPostor(string nombre, string mail)
         {
             Postor p = new Postor
