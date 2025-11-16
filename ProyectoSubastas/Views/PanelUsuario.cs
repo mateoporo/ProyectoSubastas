@@ -18,15 +18,18 @@ namespace ProyectoSubastas.Views
         private readonly string tipoUsuario;
         private readonly PostorController postorController;
         private readonly SubastadorController subastadorController;
+        private readonly SubastaController subastaController;
 
         public PanelUsuario(string tipoUsuario)
         {
             InitializeComponent();
             postorController = new PostorController();
             subastadorController = new SubastadorController();
+            subastaController = new SubastaController();
             this.tipoUsuario = tipoUsuario;
             gpDatosUsuario.Text = $"Gestionar cuenta {tipoUsuario}";
             CargarDatosUsuario();
+            CargarGrillaSubastas();
         }
 
         private void CargarDatosUsuario()
@@ -131,6 +134,61 @@ namespace ProyectoSubastas.Views
             Login loginForm = new Login();
             loginForm.Show();
             this.Hide();
+        }
+
+        private void btnCrearSubasta_Click(object sender, EventArgs e)
+        {
+            CrearModificarSubasta crearSubastaForm = new CrearModificarSubasta();
+            crearSubastaForm.ShowDialog();
+        }
+
+        private void btnModificarSubasta_Click(object sender, EventArgs e)
+        {
+            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(false);
+            modificarSubastaForm.ShowDialog();
+        }
+
+        private void CargarGrillaSubastas()
+        {
+            try
+            {
+                List<Subasta> lista = subastaController.ListarSubastas();
+
+                dgvSubastas.Rows.Clear();
+
+                var col = (DataGridViewComboBoxColumn)dgvSubastas.Columns["colParticipantes"];
+                col.Items.Clear();
+                col.Items.Add("Sin participantes");
+
+                var todosPostores = lista
+                    .SelectMany(s => s.Participantes)
+                    .Select(p => p.Nombre)
+                    .Distinct()
+                    .ToList();
+
+                foreach (var nombre in todosPostores)
+                    col.Items.Add(nombre);
+
+                foreach (var s in lista)
+                {
+                    int rowIndex = dgvSubastas.Rows.Add(
+                        s.IdSubasta,
+                        s.Articulo,
+                        "12 por postor pepe",
+                        s.PujaInicial,
+                        s.PujaAumento,
+                        s.FechaFin.ToString("dd/MM/yyyy HH:mm"),
+                        s.Subastador.Nombre,
+                        s.Activa
+                    );
+
+                    dgvSubastas.Rows[rowIndex].Cells["colParticipantes"].Value = "Sin participantes";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar subastas: " + ex.Message);
+            }
         }
     }
 }
