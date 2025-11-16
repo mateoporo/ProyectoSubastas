@@ -34,10 +34,8 @@ namespace ProyectoSubastas.Models
         public int IdSubastador { get; set; }
         public Subastador Subastador { get; set; }
 
-        // relación con ofertas
         public List<Oferta> Ofertas { get; set; } = new();
 
-        // lista de postores participando
         public List<Postor> Participantes { get; set; } = new();
 
         public Subasta() { }
