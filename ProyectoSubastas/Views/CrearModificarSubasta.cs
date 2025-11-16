@@ -16,9 +16,11 @@ namespace ProyectoSubastas.Views
     {
         private readonly Subasta subastaActual;
         private readonly SubastaController subastaController;
-        public CrearModificarSubasta(Subasta subasta = null)
+        private readonly PanelUsuario panelPadre;
+        public CrearModificarSubasta(Subasta subasta = null, PanelUsuario panelPadre = null)
         {
             InitializeComponent();
+            this.panelPadre = panelPadre;
             subastaActual = subasta;
             subastaController = new SubastaController();
             ConfigurarFormulario();
@@ -66,6 +68,7 @@ namespace ProyectoSubastas.Views
                 subastaController.CrearSubasta(articulo, pujaInicial, pujaAumento, fechaInicio, fechaFin, SesionUsuario.SubastadorActual.IdSubastador);
                 MessageBox.Show("Subasta creada correctamente");
             }
+            panelPadre?.CargarGrillaSubastas();
             this.Hide();
         }
 
