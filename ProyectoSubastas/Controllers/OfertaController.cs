@@ -17,26 +17,16 @@ namespace ProyectoSubastas.Controllers
             service = new OfertaService();
         }
 
-        // ---------------------------------------------------------------------
-        // LISTAR OFERTAS DE UNA SUBASTA
-        // ---------------------------------------------------------------------
         public List<Oferta> ListarPorSubasta(int idSubasta)
         {
             return service.ListarOfertasPorSubasta(idSubasta);
         }
 
-        // ---------------------------------------------------------------------
-        // OBTENER ÚLTIMA OFERTA
-        // ---------------------------------------------------------------------
         public Oferta ObtenerUltimaOferta(int idSubasta)
         {
             return service.ObtenerUltimaOferta(idSubasta);
         }
 
-        // ---------------------------------------------------------------------
-        // CREAR OFERTA
-        // (el controller solo transforma parámetros → Oferta + Subasta)
-        // ---------------------------------------------------------------------
         public bool CrearOferta(int idSubasta, int idPostor, decimal monto, Subasta subasta)
         {
             Oferta o = new Oferta
@@ -50,9 +40,6 @@ namespace ProyectoSubastas.Controllers
             return service.CrearOferta(o, subasta);
         }
 
-        // ---------------------------------------------------------------------
-        // ELIMINAR OFERTA
-        // ---------------------------------------------------------------------
         public bool EliminarOferta(int idOferta)
         {
             return service.EliminarOferta(idOferta);

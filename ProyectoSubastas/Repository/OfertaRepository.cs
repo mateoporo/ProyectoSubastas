@@ -12,6 +12,7 @@ namespace ProyectoSubastas.Repository
     {
         private readonly string _connectionString;
         private readonly SqliteConnection _connection;
+        private readonly PostorRepository _postorRepository = new PostorRepository();
 
         public OfertaRepository(string databaseFilePath = null)
         {
@@ -84,7 +85,8 @@ namespace ProyectoSubastas.Repository
                     Monto = reader.GetDecimal(1),
                     FechaOferta = DateTime.Parse(reader.GetString(2)),
                     IdSubasta = reader.GetInt32(3),
-                    IdPostor = reader.GetInt32(4)
+                    IdPostor = reader.GetInt32(4),
+                    Postor = _postorRepository.ObtenerPorId(reader.GetInt32(4))
                 };
             }
 
@@ -113,7 +115,8 @@ namespace ProyectoSubastas.Repository
                     Monto = reader.GetDecimal(1),
                     FechaOferta = DateTime.Parse(reader.GetString(2)),
                     IdSubasta = reader.GetInt32(3),
-                    IdPostor = reader.GetInt32(4)
+                    IdPostor = reader.GetInt32(4),
+                    Postor = _postorRepository.ObtenerPorId(reader.GetInt32(4))
                 });
             }
 
