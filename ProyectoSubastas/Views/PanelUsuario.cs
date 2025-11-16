@@ -138,7 +138,7 @@ namespace ProyectoSubastas.Views
 
         private void btnCrearSubasta_Click(object sender, EventArgs e)
         {
-            CrearModificarSubasta crearSubastaForm = new CrearModificarSubasta();
+            CrearModificarSubasta crearSubastaForm = new CrearModificarSubasta(null, this);
             crearSubastaForm.ShowDialog();
         }
 
@@ -151,11 +151,11 @@ namespace ProyectoSubastas.Views
             }
             int id = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
             Subasta sub = subastaController.ObtenerSubasta(id);
-            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(sub);
+            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(sub, this);
             modificarSubastaForm.ShowDialog();
         }
 
-        private void CargarGrillaSubastas()
+        public void CargarGrillaSubastas()
         {
             try
             {
@@ -186,7 +186,8 @@ namespace ProyectoSubastas.Views
                         s.PujaAumento,
                         s.FechaFin.ToString("dd/MM/yyyy HH:mm"),
                         s.Subastador.Nombre,
-                        s.Activa
+                        s.Activa,
+                        s.Subastador.IdSubastador
                     );
 
                     dgvSubastas.Rows[rowIndex].Cells["colParticipantes"].Value = "Sin participantes";
@@ -203,11 +204,49 @@ namespace ProyectoSubastas.Views
             if (dgvSubastas.SelectedRows.Count == 0)
             {
                 btnModificarSubasta.Enabled = false;
+                btnEliminarSubasta.Enabled = false;
                 return;
             }
             var fila = dgvSubastas.SelectedRows[0];
-            int idSubastadorFila = Convert.ToInt32(fila.Cells["colId"].Value);
-            btnModificarSubasta.Enabled = (idSubastadorFila == SesionUsuario.SubastadorActual.IdSubastador);
+            int idSubastadorFila = Convert.ToInt32(fila.Cells["colIdSubastador"].Value);
+            bool esMismoSubastador = (idSubastadorFila == SesionUsuario.SubastadorActual.IdSubastador);
+            btnModificarSubasta.Enabled = esMismoSubastador;
+            btnEliminarSubasta.Enabled = esMismoSubastador;
+        }
+
+        private void btnEliminarSubasta_Click(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una subasta para eliminar.");
+                return;
+            }
+
+            int idSubasta = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
+
+            if (!subastaController.PuedeEliminar(idSubasta))
+            {
+                MessageBox.Show("No se puede eliminar la subasta porque hay participantes activos.");
+                return;
+            }
+
+            var confirm = MessageBox.Show("¿Está seguro de eliminar esta subasta?",
+                                          "Confirmar eliminación",
+                                          MessageBoxButtons.YesNo,
+                                          MessageBoxIcon.Warning);
+
+            if (confirm == DialogResult.Yes)
+            {
+                if (subastaController.EliminarSubasta(idSubasta))
+                {
+                    MessageBox.Show("Subasta eliminada correctamente.");
+                    CargarGrillaSubastas();
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo eliminar la subasta.");
+                }
+            }
         }
     }
 }
