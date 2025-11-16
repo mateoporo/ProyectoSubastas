@@ -13,17 +13,12 @@ namespace ProyectoSubastas.Services
             repository = new PostorRepository();
         }
 
-        public List<Postor> ListarPostores()
-        {
-            return repository.ObtenerTodos();
-        }
-
         public bool CrearPostor(Postor postor)
         {
             Postor existente = repository.ObtenerPorMail(postor.Mail);
             if (existente != null)
             {
-                return false; // Ya existe un postor con ese mail
+                return false;
             }
 
             repository.Crear(postor);
@@ -35,7 +30,7 @@ namespace ProyectoSubastas.Services
             Postor existente = repository.ObtenerPorId(postor.IdPostor);
             if (existente == null)
             {
-                return false; // No existe el postor a modificar
+                return false;
             }
 
             repository.Modificar(postor);

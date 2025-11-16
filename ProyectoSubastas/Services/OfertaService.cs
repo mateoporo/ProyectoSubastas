@@ -31,22 +31,12 @@ namespace ProyectoSubastas.Services
         {
             if (subasta == null)
                 return false;
-
-            // validar que la subasta esté activa
             if (!subasta.Activa)
                 return false;
-
-            // obtener la última oferta
             var ultima = ObtenerUltimaOferta(subasta.IdSubasta);
-
-            // validar monto mínimo
-            decimal minimoEsperado = ultima != null
-                ? ultima.Monto + subasta.PujaAumento          // después de la primera oferta
-                : subasta.PujaInicial;                        // primera oferta
-
+            decimal minimoEsperado = ultima != null ? ultima.Monto + subasta.PujaAumento : subasta.PujaInicial;
             if (oferta.Monto < minimoEsperado)
                 return false;
-
             repository.Crear(oferta);
             return true;
         }
@@ -58,7 +48,6 @@ namespace ProyectoSubastas.Services
             {
                 return false;
             }
-
             repository.Eliminar(id);
             return true;
         }

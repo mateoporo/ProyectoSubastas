@@ -34,19 +34,14 @@ namespace ProyectoSubastas.Services
             {
                 return false;
             }
-
-            // validar FECHAS
             if (subasta.FechaInicio >= subasta.FechaFin)
             {
-                return false; // la subasta debe terminar después de iniciar
+                return false;
             }
-
-            // validar valores positivos
             if (subasta.PujaInicial <= 0 || subasta.PujaAumento <= 0)
             {
                 return false;
             }
-
             repository.Crear(subasta);
             return true;
         }

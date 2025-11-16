@@ -13,17 +13,12 @@ namespace ProyectoSubastas.Services
             repository = new SubastadorRepository();
         }
 
-        public List<Subastador> ListarSubastadores()
-        {
-            return repository.ObtenerTodos();
-        }
-
         public bool CrearSubastador(Subastador subastador)
         {
             Subastador existente = repository.ObtenerPorMail(subastador.Mail);
             if (existente != null)
             {
-                return false; // Ya existe un subastador con ese mail
+                return false;
             }
 
             repository.Crear(subastador);
@@ -35,7 +30,7 @@ namespace ProyectoSubastas.Services
             Subastador existente = repository.ObtenerPorId(subastador.IdSubastador);
             if (existente == null)
             {
-                return false; // No existe el subastador a modificar
+                return false;
             }
 
             repository.Modificar(subastador);
@@ -52,11 +47,6 @@ namespace ProyectoSubastas.Services
 
             repository.Eliminar(id);
             return true;
-        }
-
-        public Subastador ObtenerSubastadorPorId(int id)
-        {
-            return repository.ObtenerPorId(id);
         }
 
         public Subastador ObtenerSubastadorPorMail(string mail)
