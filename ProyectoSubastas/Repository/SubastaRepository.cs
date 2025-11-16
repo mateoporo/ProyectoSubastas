@@ -94,16 +94,25 @@ namespace ProyectoSubastas.Repository
             if (!reader.Read())
                 return null;
 
+            int idSubasta = reader.GetInt32(0);
+
+            List<Oferta> listaOfertas = _ofertaRepository.ObtenerPorSubasta(idSubasta);
+            List<Postor> participantes = listaOfertas
+                .Select(o => o.Postor)
+                .DistinctBy(p => p.IdPostor)
+                .ToList();
+
             return new Subasta
             {
-                IdSubasta = reader.GetInt32(0),
+                IdSubasta = idSubasta,
                 Articulo = reader.GetString(1),
                 PujaInicial = reader.GetDecimal(2),
                 PujaAumento = reader.GetDecimal(3),
                 FechaInicio = DateTime.Parse(reader.GetString(4)),
                 FechaFin = DateTime.Parse(reader.GetString(5)),
                 IdSubastador = reader.GetInt32(6),
-                Ofertas = _ofertaRepository.ObtenerPorSubasta(reader.GetInt32(0))
+                Ofertas = listaOfertas,
+                Participantes = participantes
             };
         }
 

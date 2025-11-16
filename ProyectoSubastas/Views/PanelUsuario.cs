@@ -19,6 +19,8 @@ namespace ProyectoSubastas.Views
         private readonly PostorController postorController;
         private readonly SubastadorController subastadorController;
         private readonly SubastaController subastaController;
+        private readonly OfertaController ofertaController;
+
 
         public PanelUsuario(string tipoUsuario)
         {
@@ -26,6 +28,7 @@ namespace ProyectoSubastas.Views
             postorController = new PostorController();
             subastadorController = new SubastadorController();
             subastaController = new SubastaController();
+            ofertaController = new OfertaController();
             this.tipoUsuario = tipoUsuario;
             gpDatosUsuario.Text = $"Gestionar cuenta {tipoUsuario}";
             CargarDatosUsuario();
@@ -40,8 +43,8 @@ namespace ProyectoSubastas.Views
             {
                 txtNombre.Text = SesionUsuario.PostorActual.Nombre;
                 txtMail.Text = SesionUsuario.PostorActual.Mail;
-                btnPujar.Visible = true;
-                btnEgresoSubasta.Visible = true;
+                //btnPujar.Visible = true;
+                //btnEgresoSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "postor.png"));
                 btnModificarSubasta.Visible = false;
                 btnEliminarSubasta.Visible = false;
@@ -52,8 +55,8 @@ namespace ProyectoSubastas.Views
                 txtNombre.Text = SesionUsuario.SubastadorActual.Nombre;
                 txtMail.Text = SesionUsuario.SubastadorActual.Mail;
                 btnCrearSubasta.Visible = true;
-                btnModificarSubasta.Visible = true;
-                btnEliminarSubasta.Visible = true;
+                //btnModificarSubasta.Visible = true;
+                //btnEliminarSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "subastador.png"));
             }
         }
@@ -374,6 +377,47 @@ namespace ProyectoSubastas.Views
                 return false;
             }
             return true;
+        }
+
+        private void btnEgresoSubasta_Click(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+                return;
+
+            int idSubasta = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
+
+            if (!VerificarSubastaActiva(idSubasta))
+                return;
+
+            var confirm = MessageBox.Show(
+                "¿Está seguro de retirarse de esta subasta?\nSe perderán todas las ofertas realizadas.",
+                "Confirmar retiro",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.Yes)
+                return;
+
+            List<Oferta> ofertas = ofertaController.ListarPorSubasta(idSubasta);
+            var ofertasUsuario = ofertas.Where(o => o.IdPostor == SesionUsuario.PostorActual.IdPostor).ToList();
+
+            if (ofertasUsuario.Count == 0)
+            {
+                MessageBox.Show("No tiene ofertas en esta subasta.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            foreach (var oferta in ofertasUsuario)
+            {
+                bool eliminado = ofertaController.EliminarOferta(oferta.IdOferta);
+                if (!eliminado)
+                {
+                    MessageBox.Show($"No se pudo eliminar la oferta {oferta.IdOferta}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            MessageBox.Show("Se ha retirado de la subasta correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CargarGrillaSubastas();
         }
     }
 }
