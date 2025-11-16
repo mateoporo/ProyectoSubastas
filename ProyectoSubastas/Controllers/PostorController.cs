@@ -77,5 +77,18 @@ namespace ProyectoSubastas.Controllers
 
             return exito;
         }
+
+        public bool SePuedeEliminar(int idPostor, out string mensaje)
+        {
+            mensaje = "";
+            var subastas = subastaService.ListarSubastas();
+            bool tieneOfertas = subastas.Any(s => s.Participantes.Any(p => p.IdPostor == idPostor));
+            if (tieneOfertas)
+            {
+                mensaje = "El postor tiene ofertas registradas en subastas y no puede ser eliminado.";
+                return false;
+            }
+            return true;
+        }
     }
 }
