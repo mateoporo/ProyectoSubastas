@@ -40,20 +40,20 @@ namespace ProyectoSubastas.Views
             {
                 txtNombre.Text = SesionUsuario.PostorActual.Nombre;
                 txtMail.Text = SesionUsuario.PostorActual.Mail;
-                //btnPujar.Visible = true;
-                //btnEgresoSubasta.Visible = true;
+                btnPujar.Visible = true;
+                btnEgresoSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "postor.png"));
-                //btnModificarSubasta.Visible = false;
-                //btnEliminarSubasta.Visible = false;
-                //btnCrearSubasta.Visible = false;
+                btnModificarSubasta.Visible = false;
+                btnEliminarSubasta.Visible = false;
+                btnCrearSubasta.Visible = false;
             }
             else if (tipoUsuario == "Subastador" && SesionUsuario.SubastadorActual != null)
             {
                 txtNombre.Text = SesionUsuario.SubastadorActual.Nombre;
                 txtMail.Text = SesionUsuario.SubastadorActual.Mail;
-                //btnCrearSubasta.Visible = true;
-                //btnModificarSubasta.Visible = true;
-                //btnEliminarSubasta.Visible = true;
+                btnCrearSubasta.Visible = true;
+                btnModificarSubasta.Visible = true;
+                btnEliminarSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "subastador.png"));
             }
         }
@@ -97,25 +97,26 @@ namespace ProyectoSubastas.Views
 
         private void btnEliminarUsuario_Click(object sender, EventArgs e)
         {
-            string aclaracion;
-            if (tipoUsuario == "Postor")
-            {
-                aclaracion = "Al eliminar su cuenta, será dado de baja de cualquier subasta en la que participe.";
-            }
-            else
-            {
-                aclaracion = "Al eliminar su cuenta, todas las subastas que haya creado serán eliminadas.";
-            }
-            var respuesta = MessageBox.Show("¿Está seguro de eliminar su cuenta como " + tipoUsuario + "?\n\n" + aclaracion, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            string mensajeValidacion;
+            var respuesta = MessageBox.Show("¿Está seguro de eliminar su cuenta como " + tipoUsuario + "?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (respuesta == DialogResult.Yes)
             {
                 if (tipoUsuario == "Postor")
                 {
+                    if (!postorController.SePuedeEliminar(SesionUsuario.PostorActual.IdPostor, out mensajeValidacion))
+                    {
+                        MessageBox.Show(mensajeValidacion, "No se puede eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                     postorController.EliminarPostor(SesionUsuario.PostorActual.IdPostor);
-                    // queda por hacer, dar de baja al postor a eliminar en las subastas que se encuentre participando
                 }
                 else
                 {
+                    if (!subastadorController.SePuedeEliminar(SesionUsuario.SubastadorActual.IdSubastador, out mensajeValidacion))
+                    {
+                        MessageBox.Show(mensajeValidacion, "No se puede eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                     subastadorController.EliminarSubastador(SesionUsuario.SubastadorActual.IdSubastador);
                     // queda por hacer, eliminar todas las subastas que el subastador a eliminar haya creado
                 }
