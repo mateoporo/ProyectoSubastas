@@ -1,4 +1,5 @@
 ﻿using ProyectoSubastas.Models;
+using ProyectoSubastas.Repository;
 using ProyectoSubastas.Services;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,11 @@ namespace ProyectoSubastas.Controllers
             service = new SubastaService();
         }
 
-        // ------------------------------------------------------------
-        // LISTAR SUBASTAS
-        // ------------------------------------------------------------
         public List<Subasta> ListarSubastas()
         {
             return service.ListarSubastas();
         }
 
-        // ------------------------------------------------------------
-        // CREAR SUBASTA
-        // ------------------------------------------------------------
         public bool CrearSubasta(
             string articulo,
             decimal pujaInicial,
@@ -50,18 +45,7 @@ namespace ProyectoSubastas.Controllers
             return service.CrearSubasta(s);
         }
 
-        // ------------------------------------------------------------
-        // MODIFICAR SUBASTA
-        // ------------------------------------------------------------
-        public bool ModificarSubasta(
-            int idSubasta,
-            string articulo,
-            decimal pujaInicial,
-            decimal pujaAumento,
-            DateTime fechaInicio,
-            DateTime fechaFin,
-            int idSubastador
-        )
+        public bool ModificarSubasta(int idSubasta, string articulo, decimal pujaInicial, decimal pujaAumento,DateTime fechaInicio, DateTime fechaFin, int idSubastador)
         {
             Subasta s = new Subasta
             {
@@ -77,20 +61,23 @@ namespace ProyectoSubastas.Controllers
             return service.ModificarSubasta(s);
         }
 
-        // ------------------------------------------------------------
-        // ELIMINAR SUBASTA
-        // ------------------------------------------------------------
         public bool EliminarSubasta(int id)
         {
             return service.EliminarSubasta(id);
         }
 
-        // ------------------------------------------------------------
-        // OBTENER POR ID
-        // ------------------------------------------------------------
         public Subasta ObtenerSubasta(int id)
         {
             return service.ObtenerSubastaPorId(id);
+        }
+
+        public bool PuedeEliminar(int idSubasta)
+        {
+            var subasta = ObtenerSubasta(idSubasta);
+            if (subasta == null)
+                return false;
+
+            return subasta.Participantes == null || subasta.Participantes.Count == 0;
         }
     }
 }
