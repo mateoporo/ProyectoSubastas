@@ -14,29 +14,14 @@ namespace ProyectoSubastas.Views
 {
     public partial class CrearModificarSubasta : Form
     {
-        private readonly bool crearSubasta;
+        private readonly Subasta subastaActual;
         private readonly SubastaController subastaController;
-        public CrearModificarSubasta(bool crearSubasta = true)
+        public CrearModificarSubasta(Subasta subasta = null)
         {
             InitializeComponent();
-            this.crearSubasta = crearSubasta;
+            subastaActual = subasta;
             subastaController = new SubastaController();
-            if (!crearSubasta)
-            {
-                gpDatosSubasta.Text = "Modificar Subasta";
-                btnAccion.Text = "Modificar Subasta";
-                this.Text = "Modificar Subasta";
-            }
-            else
-            {
-                gpDatosSubasta.Text = "Crear Subasta";
-                btnAccion.Text = "Crear Subasta";
-                this.Text = "Crear Subasta";
-            }
-            dateFechaInicio.ValueChanged += (s, e) =>
-            {
-                dateFechaFin.MinDate = dateFechaInicio.Value;
-            };
+            ConfigurarFormulario();
         }
 
         private void btnAccion_Click(object sender, EventArgs e)
@@ -71,9 +56,10 @@ namespace ProyectoSubastas.Views
                 return;
             }
 
-            if (!crearSubasta)
+            if (subastaActual != null)
             {
-                //MODIFICAR SUBASTA
+                subastaController.ModificarSubasta(subastaActual.IdSubasta, articulo, pujaInicial, pujaAumento, fechaInicio, fechaFin, SesionUsuario.SubastadorActual.IdSubastador);
+                MessageBox.Show("Subasta modificada correctamente");
             }
             else
             {
@@ -81,6 +67,57 @@ namespace ProyectoSubastas.Views
                 MessageBox.Show("Subasta creada correctamente");
             }
             this.Hide();
+        }
+
+
+        private void ConfigurarFormulario()
+        {
+            if (subastaActual == null)
+            {
+                Text = "Crear Subasta";
+                gpDatosSubasta.Text = "Crear Subasta";
+                btnAccion.Text = "Crear Subasta";
+
+                dateFechaInicio.MinDate = DateTime.Now;
+                dateFechaFin.MinDate = dateFechaInicio.Value;
+
+                dateFechaInicio.ValueChanged += (s, e) =>
+                {
+                    dateFechaFin.MinDate = dateFechaInicio.Value.AddSeconds(1); // evita que sea igual a inicio
+                    if (dateFechaFin.Value <= dateFechaInicio.Value)
+                    {
+                        dateFechaFin.Value = dateFechaInicio.Value.AddDays(1);
+                    }
+                };
+
+                return;
+            }
+
+            Text = "Modificar Subasta";
+            gpDatosSubasta.Text = "Modificar Subasta";
+            btnAccion.Text = "Modificar Subasta";
+
+            txtArticulo.Text = subastaActual.Articulo;
+            numPujaInicial.Value = subastaActual.PujaInicial;
+            numPujaAumento.Value = subastaActual.PujaAumento;
+
+            dateFechaInicio.Value = subastaActual.FechaInicio;
+            dateFechaFin.Value = subastaActual.FechaFin;
+
+            dateFechaInicio.MinDate = DateTime.Now <= subastaActual.FechaInicio
+                ? DateTime.Now
+                : subastaActual.FechaInicio;
+
+            dateFechaFin.MinDate = subastaActual.FechaInicio.AddSeconds(1);
+
+            dateFechaInicio.ValueChanged += (s, e) =>
+            {
+                dateFechaFin.MinDate = dateFechaInicio.Value.AddSeconds(1);
+                if (dateFechaFin.Value <= dateFechaInicio.Value)
+                {
+                    dateFechaFin.Value = dateFechaInicio.Value.AddDays(1);
+                }
+            };
         }
     }
 }
