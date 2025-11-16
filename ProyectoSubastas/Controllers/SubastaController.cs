@@ -79,5 +79,25 @@ namespace ProyectoSubastas.Controllers
 
             return subasta.Participantes == null || subasta.Participantes.Count == 0;
         }
+
+        public string ObtenerGanadorSubasta(int idSubasta)
+        {
+            var subasta = ObtenerSubasta(idSubasta);
+            if (subasta == null)
+                return "No se pudo encontrar la subasta.";
+
+            var ultimaOferta = subasta.ObtenerUltimaOferta();
+            if (ultimaOferta == null)
+                return $"La subasta '{subasta.Articulo}' finalizó sin ofertas. No hay ganador.";
+
+            string ganador = ultimaOferta.Postor.Nombre;
+            decimal montoAPagar = ultimaOferta.Monto;
+            decimal diferencial = montoAPagar - subasta.PujaInicial;
+
+            return $"Subasta: {subasta.Articulo}\n" +
+                   $"Ganador: {ganador}\n" +
+                   $"Monto a pagar: ${montoAPagar}\n" +
+                   $"Diferencial con puja inicial: ${diferencial}";
+        }
     }
 }
