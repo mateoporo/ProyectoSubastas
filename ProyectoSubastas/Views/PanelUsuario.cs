@@ -21,7 +21,6 @@ namespace ProyectoSubastas.Views
         private readonly SubastaController subastaController;
         private readonly OfertaController ofertaController;
 
-
         public PanelUsuario(string tipoUsuario)
         {
             InitializeComponent();
@@ -37,7 +36,6 @@ namespace ProyectoSubastas.Views
 
         private void CargarDatosUsuario()
         {
-            // Ruta base del proyecto (bin/Debug → se retrocede a raiz de proyecto)
             string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\");
             if (tipoUsuario == "Postor" && SesionUsuario.PostorActual != null)
             {
@@ -121,7 +119,6 @@ namespace ProyectoSubastas.Views
                         return;
                     }
                     subastadorController.EliminarSubastador(SesionUsuario.SubastadorActual.IdSubastador);
-                    // queda por hacer, eliminar todas las subastas que el subastador a eliminar haya creado
                 }
                 MessageBox.Show("Usuario eliminado correctamente. Se redirigirá automaticamente al login de la aplicación.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Login loginForm = new Login();
@@ -135,7 +132,7 @@ namespace ProyectoSubastas.Views
             var respuesta = MessageBox.Show("¿Desea cerrar el panel de usuario? Si continúa se redirigirá automaticamente al login de la aplicación.", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (respuesta == DialogResult.No)
             {
-                e.Cancel = true; // cancela el cierre
+                e.Cancel = true;
                 return;
             }
             Login loginForm = new Login();
@@ -175,7 +172,6 @@ namespace ProyectoSubastas.Views
                 var col = (DataGridViewComboBoxColumn)dgvSubastas.Columns["colParticipantes"];
                 col.Items.Clear();
 
-                // Obtener todos los nombres de participantes de todas las subastas y aplicar Distinct
                 var todosNombres = lista
                     .SelectMany(s => s.Participantes)
                     .Select(p => p.Nombre)
@@ -243,7 +239,7 @@ namespace ProyectoSubastas.Views
             }
 
             var fila = dgvSubastas.SelectedRows[0];
-            string estadoSubasta = Convert.ToString(fila.Cells["colEstado"].Value); // ACTIVA / FINALIZADA
+            string estadoSubasta = Convert.ToString(fila.Cells["colEstado"].Value);
 
             if (SesionUsuario.SubastadorActual != null)
             {
@@ -310,10 +306,7 @@ namespace ProyectoSubastas.Views
                 return;
             }
 
-            var confirm = MessageBox.Show("¿Está seguro de eliminar esta subasta?",
-                                          "Confirmar eliminación",
-                                          MessageBoxButtons.YesNo,
-                                          MessageBoxIcon.Warning);
+            var confirm = MessageBox.Show("¿Está seguro de eliminar esta subasta?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (confirm == DialogResult.Yes)
             {
@@ -389,11 +382,7 @@ namespace ProyectoSubastas.Views
             if (!VerificarSubastaActiva(idSubasta))
                 return;
 
-            var confirm = MessageBox.Show(
-                "¿Está seguro de retirarse de esta subasta?\nSe perderán todas las ofertas realizadas.",
-                "Confirmar retiro",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            var confirm = MessageBox.Show("¿Está seguro de retirarse de esta subasta?\nSe perderán todas las ofertas realizadas.", "Confirmar retiro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (confirm != DialogResult.Yes)
                 return;

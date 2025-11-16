@@ -85,7 +85,7 @@ namespace ProyectoSubastas.Views
 
                 dateFechaInicio.ValueChanged += (s, e) =>
                 {
-                    dateFechaFin.MinDate = dateFechaInicio.Value.AddSeconds(1); // evita que sea igual a inicio
+                    dateFechaFin.MinDate = dateFechaInicio.Value.AddSeconds(1);
                     if (dateFechaFin.Value <= dateFechaInicio.Value)
                     {
                         dateFechaFin.Value = dateFechaInicio.Value.AddDays(1);
@@ -98,20 +98,13 @@ namespace ProyectoSubastas.Views
             Text = "Modificar Subasta";
             gpDatosSubasta.Text = "Modificar Subasta";
             btnAccion.Text = "Modificar Subasta";
-
             txtArticulo.Text = subastaActual.Articulo;
             numPujaInicial.Value = subastaActual.PujaInicial;
             numPujaAumento.Value = subastaActual.PujaAumento;
-
             dateFechaInicio.Value = subastaActual.FechaInicio;
             dateFechaFin.Value = subastaActual.FechaFin;
-
-            dateFechaInicio.MinDate = DateTime.Now <= subastaActual.FechaInicio
-                ? DateTime.Now
-                : subastaActual.FechaInicio;
-
+            dateFechaInicio.MinDate = DateTime.Now <= subastaActual.FechaInicio ? DateTime.Now : subastaActual.FechaInicio;
             dateFechaFin.MinDate = subastaActual.FechaInicio.AddSeconds(1);
-
             dateFechaInicio.ValueChanged += (s, e) =>
             {
                 dateFechaFin.MinDate = dateFechaInicio.Value.AddSeconds(1);
