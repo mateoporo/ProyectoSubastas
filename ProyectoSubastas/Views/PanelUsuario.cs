@@ -1,4 +1,5 @@
-﻿using ProyectoSubastas.Models;
+﻿using ProyectoSubastas.Controllers;
+using ProyectoSubastas.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,15 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProyectoSubastas.Views
 {
     public partial class PanelUsuario : Form
     {
         private readonly string tipoUsuario;
+        private readonly PostorController postorController;
+        private readonly SubastadorController subastadorController;
+
         public PanelUsuario(string tipoUsuario)
         {
             InitializeComponent();
+            postorController = new PostorController();
+            subastadorController = new SubastadorController();
             this.tipoUsuario = tipoUsuario;
             gpDatosUsuario.Text = $"Gestionar cuenta {tipoUsuario}";
             CargarDatosUsuario();
@@ -30,19 +37,100 @@ namespace ProyectoSubastas.Views
             {
                 txtNombre.Text = SesionUsuario.PostorActual.Nombre;
                 txtMail.Text = SesionUsuario.PostorActual.Mail;
-                btnPujar.Enabled = true;
-                btnEgresoSubasta.Enabled = true;
+                btnPujar.Visible = true;
+                btnEgresoSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "postor.png"));
             }
             else if (tipoUsuario == "Subastador" && SesionUsuario.SubastadorActual != null)
             {
                 txtNombre.Text = SesionUsuario.SubastadorActual.Nombre;
                 txtMail.Text = SesionUsuario.SubastadorActual.Mail;
-                btnCrearSubasta.Enabled = true;
-                btnModificarSubasta.Enabled = true;
-                btnEliminarSubasta.Enabled = true;
+                btnCrearSubasta.Visible = true;
+                btnModificarSubasta.Visible = true;
+                btnEliminarSubasta.Visible = true;
                 picTipoUsuario.Image = Image.FromFile(Path.Combine(basePath, "subastador.png"));
             }
+        }
+
+        private void btnModificarUsuario_Click(object sender, EventArgs e)
+        {
+            txtNombre.Enabled = true;
+            txtMail.Enabled = true;
+            btnGuardarUsuarioModificado.Enabled = true;
+            btnModificarUsuario.Enabled = false;
+            btnEliminarUsuario.Enabled = false;
+            gpSubastas.Enabled = false;
+        }
+
+        private void btnGuardarUsuarioModificado_Click(object sender, EventArgs e)
+        {
+            string nombre = txtNombre.Text.Trim();
+            string mail = txtMail.Text.Trim();
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(mail))
+            {
+                MessageBox.Show("Complete todos los campos.");
+                return;
+            }
+            if (tipoUsuario == "Postor")
+            {
+                postorController.ModificarPostor(SesionUsuario.PostorActual.IdPostor, nombre, mail);
+                MessageBox.Show("Postor modificado correctamente");
+            }
+            else
+            {
+                subastadorController.ModificarSubastador(SesionUsuario.SubastadorActual.IdSubastador, nombre, mail);
+                MessageBox.Show("Subastador modificado correctamente");
+            }
+            txtNombre.Enabled = false;
+            txtMail.Enabled = false;
+            btnGuardarUsuarioModificado.Enabled = false;
+            btnModificarUsuario.Enabled = true;
+            btnEliminarUsuario.Enabled = true;
+            gpSubastas.Enabled = true;
+        }
+
+        private void btnEliminarUsuario_Click(object sender, EventArgs e)
+        {
+            string aclaracion;
+            if (tipoUsuario == "Postor")
+            {
+                aclaracion = "Al eliminar su cuenta, será dado de baja de cualquier subasta en la que participe.";
+            }
+            else
+            {
+                aclaracion = "Al eliminar su cuenta, todas las subastas que haya creado serán eliminadas.";
+            }
+            var respuesta = MessageBox.Show("¿Está seguro de eliminar su cuenta como " + tipoUsuario + "?\n\n" + aclaracion, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (respuesta == DialogResult.Yes)
+            {
+                if (tipoUsuario == "Postor")
+                {
+                    postorController.EliminarPostor(SesionUsuario.PostorActual.IdPostor);
+                    // queda por hacer, dar de baja al postor a eliminar en las subastas que se encuentre participando
+                }
+                else
+                {
+                    subastadorController.EliminarSubastador(SesionUsuario.SubastadorActual.IdSubastador);
+                    // queda por hacer, eliminar todas las subastas que el subastador a eliminar haya creado
+                }
+                MessageBox.Show("Usuario eliminado correctamente. Se redirigirá automaticamente al login de la aplicación.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Login loginForm = new Login();
+                loginForm.Show();
+                this.Hide();
+            }
+        }
+
+        private void PanelUsuario_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var respuesta = MessageBox.Show("¿Desea cerrar el panel de usuario? Si continúa se redirigirá automaticamente al login de la aplicación.", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (respuesta == DialogResult.No)
+            {
+                e.Cancel = true; // cancela el cierre
+                return;
+            }
+            Login loginForm = new Login();
+            loginForm.Show();
+            this.Hide();
         }
     }
 }
