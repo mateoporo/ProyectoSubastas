@@ -40,15 +40,14 @@ namespace ProyectoSubastas.Views
                 return;
             }
 
-            if (fechaInicio < DateTime.Today)
+            if (fechaInicio < DateTime.Now)
             {
-                MessageBox.Show("La fecha de inicio no puede ser anterior al día de hoy.");
+                MessageBox.Show("La fecha y hora de inicio no puede ser anterior al momento actual.");
                 return;
             }
-
             if (fechaFin <= fechaInicio)
             {
-                MessageBox.Show("La fecha de fin debe ser mayor a la fecha de inicio.");
+                MessageBox.Show("La fecha y hora de fin debe ser mayor a la fecha y hora de inicio.");
                 return;
             }
 
