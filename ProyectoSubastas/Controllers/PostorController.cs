@@ -7,10 +7,14 @@ namespace ProyectoSubastas.Controllers
     public class PostorController
     {
         private readonly PostorService service;
+        private readonly SubastaService subastaService;
+        private readonly OfertaController ofertaController;
 
         public PostorController()
         {
             service = new PostorService();
+            subastaService = new SubastaService();
+            ofertaController = new OfertaController();
         }
 
         public List<Postor> ListarPostores()
@@ -49,6 +53,29 @@ namespace ProyectoSubastas.Controllers
         public Postor ObtenerPorMail(string mail)
         {
             return service.ObtenerPostorPorMail(mail);
+        }
+
+        public bool Pujar(int idSubasta, int idPostor, out decimal montoPuja)
+        {
+            montoPuja = 0;
+            var subasta = subastaService.ObtenerSubastaPorId(idSubasta);
+            if (subasta == null || !subasta.Activa)
+                return false;
+
+            var ultimaOferta = ofertaController.ObtenerUltimaOferta(idSubasta);
+
+            if (ultimaOferta != null)
+            {
+                montoPuja = ultimaOferta.Monto + subasta.PujaAumento;
+            }
+            else
+            {
+                montoPuja = subasta.PujaAumento;
+            }
+
+            bool exito = ofertaController.CrearOferta(idSubasta, idPostor, montoPuja, subasta);
+
+            return exito;
         }
     }
 }
