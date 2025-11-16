@@ -18,15 +18,18 @@ namespace ProyectoSubastas.Views
         private readonly string tipoUsuario;
         private readonly PostorController postorController;
         private readonly SubastadorController subastadorController;
+        private readonly SubastaController subastaController;
 
         public PanelUsuario(string tipoUsuario)
         {
             InitializeComponent();
             postorController = new PostorController();
             subastadorController = new SubastadorController();
+            subastaController = new SubastaController();
             this.tipoUsuario = tipoUsuario;
             gpDatosUsuario.Text = $"Gestionar cuenta {tipoUsuario}";
             CargarDatosUsuario();
+            CargarGrillaSubastas();
         }
 
         private void CargarDatosUsuario()
@@ -131,6 +134,119 @@ namespace ProyectoSubastas.Views
             Login loginForm = new Login();
             loginForm.Show();
             this.Hide();
+        }
+
+        private void btnCrearSubasta_Click(object sender, EventArgs e)
+        {
+            CrearModificarSubasta crearSubastaForm = new CrearModificarSubasta(null, this);
+            crearSubastaForm.ShowDialog();
+        }
+
+        private void btnModificarSubasta_Click(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una subasta para modificar.");
+                return;
+            }
+            int id = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
+            Subasta sub = subastaController.ObtenerSubasta(id);
+            CrearModificarSubasta modificarSubastaForm = new CrearModificarSubasta(sub, this);
+            modificarSubastaForm.ShowDialog();
+        }
+
+        public void CargarGrillaSubastas()
+        {
+            try
+            {
+                List<Subasta> lista = subastaController.ListarSubastas();
+
+                dgvSubastas.Rows.Clear();
+
+                var col = (DataGridViewComboBoxColumn)dgvSubastas.Columns["colParticipantes"];
+                col.Items.Clear();
+                col.Items.Add("Sin participantes");
+
+                var todosPostores = lista
+                    .SelectMany(s => s.Participantes)
+                    .Select(p => p.Nombre)
+                    .Distinct()
+                    .ToList();
+
+                foreach (var nombre in todosPostores)
+                    col.Items.Add(nombre);
+
+                foreach (var s in lista)
+                {
+                    int rowIndex = dgvSubastas.Rows.Add(
+                        s.IdSubasta,
+                        s.Articulo,
+                        "12 por postor pepe",
+                        s.PujaInicial,
+                        s.PujaAumento,
+                        s.FechaFin.ToString("dd/MM/yyyy HH:mm"),
+                        s.Subastador.Nombre,
+                        s.Activa,
+                        s.Subastador.IdSubastador
+                    );
+
+                    dgvSubastas.Rows[rowIndex].Cells["colParticipantes"].Value = "Sin participantes";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar subastas: " + ex.Message);
+            }
+        }
+
+        private void dgvSubastas_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                btnModificarSubasta.Enabled = false;
+                btnEliminarSubasta.Enabled = false;
+                return;
+            }
+            var fila = dgvSubastas.SelectedRows[0];
+            int idSubastadorFila = Convert.ToInt32(fila.Cells["colIdSubastador"].Value);
+            bool esMismoSubastador = (idSubastadorFila == SesionUsuario.SubastadorActual.IdSubastador);
+            btnModificarSubasta.Enabled = esMismoSubastador;
+            btnEliminarSubasta.Enabled = esMismoSubastador;
+        }
+
+        private void btnEliminarSubasta_Click(object sender, EventArgs e)
+        {
+            if (dgvSubastas.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una subasta para eliminar.");
+                return;
+            }
+
+            int idSubasta = Convert.ToInt32(dgvSubastas.SelectedRows[0].Cells["colId"].Value);
+
+            if (!subastaController.PuedeEliminar(idSubasta))
+            {
+                MessageBox.Show("No se puede eliminar la subasta porque hay participantes activos.");
+                return;
+            }
+
+            var confirm = MessageBox.Show("¿Está seguro de eliminar esta subasta?",
+                                          "Confirmar eliminación",
+                                          MessageBoxButtons.YesNo,
+                                          MessageBoxIcon.Warning);
+
+            if (confirm == DialogResult.Yes)
+            {
+                if (subastaController.EliminarSubasta(idSubasta))
+                {
+                    MessageBox.Show("Subasta eliminada correctamente.");
+                    CargarGrillaSubastas();
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo eliminar la subasta.");
+                }
+            }
         }
     }
 }

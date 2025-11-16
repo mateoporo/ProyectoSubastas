@@ -1,0 +1,61 @@
+﻿using ProyectoSubastas.Models;
+using ProyectoSubastas.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProyectoSubastas.Controllers
+{
+    public class OfertaController
+    {
+        private readonly OfertaService service;
+
+        public OfertaController()
+        {
+            service = new OfertaService();
+        }
+
+        // ---------------------------------------------------------------------
+        // LISTAR OFERTAS DE UNA SUBASTA
+        // ---------------------------------------------------------------------
+        public List<Oferta> ListarPorSubasta(int idSubasta)
+        {
+            return service.ListarOfertasPorSubasta(idSubasta);
+        }
+
+        // ---------------------------------------------------------------------
+        // OBTENER ÚLTIMA OFERTA
+        // ---------------------------------------------------------------------
+        public Oferta ObtenerUltimaOferta(int idSubasta)
+        {
+            return service.ObtenerUltimaOferta(idSubasta);
+        }
+
+        // ---------------------------------------------------------------------
+        // CREAR OFERTA
+        // (el controller solo transforma parámetros → Oferta + Subasta)
+        // ---------------------------------------------------------------------
+        public bool CrearOferta(int idSubasta, int idPostor, decimal monto, Subasta subasta)
+        {
+            Oferta o = new Oferta
+            {
+                IdSubasta = idSubasta,
+                IdPostor = idPostor,
+                Monto = monto,
+                FechaOferta = DateTime.Now
+            };
+
+            return service.CrearOferta(o, subasta);
+        }
+
+        // ---------------------------------------------------------------------
+        // ELIMINAR OFERTA
+        // ---------------------------------------------------------------------
+        public bool EliminarOferta(int idOferta)
+        {
+            return service.EliminarOferta(idOferta);
+        }
+    }
+}
